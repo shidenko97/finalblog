@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% import "material/utils.html" as util %}
+{% import "material/wtf.html" as wtf %}
+
+{% block content %}
+    {{ container() }}
+        {{ row() }}
+            {{ col(["s12", "offset-m3", "m6"]) }}
+                {{ util.card(title, wtf.quick_form(form)) }}
+            {{ enddiv() }}
+        {{ enddiv() }}
+    {{ enddiv() }}
+{% endblock %}

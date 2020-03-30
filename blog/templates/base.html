@@ -1,0 +1,91 @@
+{% extends "material/base.html" %}
+{% import "material/utils.html" as util %}
+
+{% block title %}
+    {% if title %}{{ title }} - Final Blog{% else %}Final Blog{% endif %}
+{% endblock %}
+
+{% block navbar %}
+    <nav>
+        <div class="nav-wrapper">
+            <div class="row">
+                <div class="col s12">
+                    <a href="{{ url_for("main.index") }}" class="brand-logo">Final blog</a>
+                    <a href="#"
+                       data-target="mobile-demo"
+                       class="sidenav-trigger"
+                    >
+                        <i class="material-icons">menu</i>
+                    </a>
+                    <ul class="right hide-on-med-and-down">
+                        {% if current_user.is_anonymous %}
+                            <li>
+                                <a href="{{ url_for("auth.login") }}">
+                                    Sign in
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for("auth.register") }}">
+                                    Sign up
+                                </a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a class="dropdown-trigger"
+                                   href="#"
+                                   data-target="profile-menu"
+                                >
+                                    {{ current_user.fullname }}
+                                    <i class="material-icons right">
+                                        arrow_drop_down
+                                    </i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <ul id="profile-menu" class="dropdown-content">
+        <li><a href="#">Profile</a></li>
+        <li class="divider"></li>
+        <li><a href="{{ url_for("auth.logout") }}">Logout</a></li>
+    </ul>
+
+    <ul class="sidenav" id="mobile-demo">
+        {% if current_user.is_anonymous %}
+            <li><a href="{{ url_for("auth.login") }}">Sign in</a></li>
+            <li><a href="{{ url_for("auth.register") }}">Sign up</a></li>
+        {% else %}
+            <li><a href="#">Profile</a></li>
+            <li><a href="{{ url_for("auth.logout") }}">Logout</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
+{% block scripts %}
+    <script
+        src="{{ material_find_resource('jquery.js', cdn='jquery') }}"
+    ></script>
+    <script
+        src="{{ material_find_resource('js/materialize.js', cdn='material') }}"
+    ></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const elems = document.querySelectorAll('.sidenav');
+            M.Sidenav.init(elems);
+        });
+
+        $(".dropdown-trigger").dropdown();
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+                M.toast({html: "{{ message }}" });
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </script>
+{% endblock %}
