@@ -49,7 +49,7 @@
     </nav>
 
     <ul id="profile-menu" class="dropdown-content">
-        <li><a href="#">Profile</a></li>
+        <li><a href="{{ url_for("auth.profile") }}">Profile</a></li>
         <li class="divider"></li>
         <li><a href="{{ url_for("auth.logout") }}">Logout</a></li>
     </ul>
@@ -59,7 +59,7 @@
             <li><a href="{{ url_for("auth.login") }}">Sign in</a></li>
             <li><a href="{{ url_for("auth.register") }}">Sign up</a></li>
         {% else %}
-            <li><a href="#">Profile</a></li>
+            <li><a href="{{ url_for("auth.profile") }}">Profile</a></li>
             <li><a href="{{ url_for("auth.logout") }}">Logout</a></li>
         {% endif %}
     </ul>
@@ -79,6 +79,8 @@
         });
 
         $(".dropdown-trigger").dropdown();
+        $('#birthday').datepicker({format: "yyyy-mm-dd"});
+        $('select').formSelect();
 
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}

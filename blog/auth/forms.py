@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms import DateField, PasswordField, SelectField, StringField, \
+    SubmitField
+from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 
 from blog.auth.models import User
 from blog.util.validators import Unique
@@ -55,3 +56,25 @@ class ResetPasswordForm(FlaskForm):
                                     validators=[DataRequired(),
                                                 EqualTo("password")])
     submit = SubmitField("Reset")
+
+
+class ProfileForm(FlaskForm):
+    """Form for editing profile"""
+
+    email = StringField(
+        "Email",
+        validators=[
+            DataRequired(),
+            Email(),
+            Length(max=64)
+        ]
+    )
+    fullname = StringField("Fullname", validators=[DataRequired(),
+                                                   Length(max=64)])
+    birthday = DateField("Birthday", validators=[Optional()])
+    sex = SelectField("Sex",
+                      choices=[("", " - "), ("m", "Male"), ("f", "Female")],
+                      validators=[Optional()])
+    password = PasswordField("Password", validators=[Length(min=6, max=64),
+                                                     Optional()])
+    submit = SubmitField("Submit")

@@ -4,8 +4,8 @@ from werkzeug.urls import url_parse
 
 from blog import db
 from blog.auth import bp
-from blog.auth.forms import LoginForm, RegistrationForm, RestorePasswordForm, \
-    ResetPasswordForm
+from blog.auth.forms import LoginForm, ProfileForm, RegistrationForm, \
+    RestorePasswordForm, ResetPasswordForm
 from blog.auth.models import User, Role
 from blog.util.mail import send_mail
 
@@ -131,3 +131,43 @@ def reset_pass(token):
 
     return render_template("auth/multi_form.html", title="Reset password",
                            form=form)
+
+
+@bp.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    """Profile editing view"""
+
+    user = current_user
+    form = ProfileForm()
+
+    if request.method == "POST" and form.validate_on_submit():
+
+        # If email was changed - check for unique
+        if user.email != form.email.data and \
+                User.query.filter_by(email=form.email.data).first():
+            flash("Please, enter the another email!")
+            return redirect(url_for("auth.profile"))
+        else:
+            user.email = form.email.data
+
+        # If password is set - hash it
+        if form.password.data:
+            user.password = form.password.data
+            user.hash_password()
+
+        user.fullname = form.fullname.data
+        user.birthday = form.birthday.data
+        user.sex = form.sex.data
+
+        db.session.add(user)
+        db.session.commit()
+
+        flash("You're changes have been saved!")
+
+        return redirect(url_for("auth.profile"))
+    elif request.method == "GET":
+        form = ProfileForm(obj=user)
+
+    return render_template("auth/profile.html", title="Profile", form=form,
+                           user=user)

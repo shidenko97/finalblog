@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "material/utils.html" as util %}
+{% import "material/wtf.html" as wtf %}
+
+{% set profile_form %}
+    {{ wtf.quick_form(form) }}
+{% endset %}
+
+{% set avatar_image %}
+    <img alt="{{ user.fullname }}"
+         style="max-width: 100%; width: 300px;"
+         src="{{ user.avatar(300) }}"
+    />
+{% endset %}
+
+{% block content %}
+    {{ container() }}
+        {{ row() }}
+            {{ col(["s12", "m6"]) }}
+                {{ util.card("Avatar", avatar_image) }}
+            {{ enddiv() }}
+            {{ col(["s12", "m6"]) }}
+                {{ util.card("Edit profile", profile_form) }}
+            {{ enddiv() }}
+        {{ enddiv() }}
+    {{ enddiv() }}
+{% endblock %}
