@@ -36,3 +36,22 @@ class RegistrationForm(FlaskForm):
                                     validators=[DataRequired(),
                                                 EqualTo("password")])
     submit = SubmitField("Sign In")
+
+
+class RestorePasswordForm(FlaskForm):
+    """Public form for restoring password through email"""
+
+    email = StringField("Email", validators=[DataRequired(), Email(),
+                                             Length(max=64)])
+    submit = SubmitField("Restore")
+
+
+class ResetPasswordForm(FlaskForm):
+    """Public form for resetting password after restoring"""
+
+    password = PasswordField("Password", validators=[DataRequired(),
+                                                     Length(min=6, max=64)])
+    password_repeat = PasswordField("Repeat Password",
+                                    validators=[DataRequired(),
+                                                EqualTo("password")])
+    submit = SubmitField("Reset")

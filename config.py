@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    """"""
+    """Default project config"""
 
     # App configuration
     DEBUG = bool(os.getenv("DEBUG") or False)
@@ -19,3 +19,11 @@ class Config:
     # Login configuration
     SECURITY_PASSWORD_SALT = os.getenv("SECURITY_PASSWORD_SALT") or "123456789"
     SECURITY_PASSWORD_HASH = os.getenv("SECURITY_PASSWORD_HASH") or "bcrypt"
+
+    # Mail configuration
+    MAIL_SERVER = os.getenv("MAIL_SERVER")
+    MAIL_PORT = int(os.getenv("MAIL_PORT") or 25)
+    MAIL_USE_TLS = bool(os.getenv("MAIL_USE_TLS") or False)
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+    MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER")

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "material/utils.html" as util %}
+{% import "material/wtf.html" as wtf %}
+
+{% set buttons %}
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for("auth.restore") }}"
+           class="waves-effect waves-light btn-small blue lighten-2"
+        >
+            Restore pass
+        </a>
+    </div>
+{% endset %}
+
+{% block content %}
+    {{ container() }}
+        {{ row() }}
+            {{ col(["s12", "offset-m3", "m6"]) }}
+                {{ util.card(title, wtf.quick_form(form) + buttons) }}
+            {{ enddiv() }}
+        {{ enddiv() }}
+    {{ enddiv() }}
+{% endblock %}

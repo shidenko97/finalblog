@@ -1,7 +1,10 @@
 from hashlib import md5
+from time import time
 
 from bcrypt import checkpw, gensalt, hashpw
+from flask import current_app
 from flask_security import RoleMixin, UserMixin
+import jwt
 
 from blog import db
 
@@ -58,6 +61,39 @@ class User(db.Model, UserMixin):
         """
 
         return checkpw(password.encode("utf-8"), self.password.encode("utf-8"))
+
+    def get_restore_token(self, expires_in: int = 600) -> str:
+        """
+        Generate password restore token
+        :param expires_in: Token expiration time
+        :type expires_in: int
+        :return: Generated token
+        :rtype: str
+        """
+
+        return jwt.encode({
+            'reset_password': self.id,
+            'exp': time() + expires_in
+        }, current_app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_restore_token(token: str):
+        """
+        Check if password restore token valid
+        :param token: Token for checking
+        :type token: str
+        :return: User by token or None if token is not valid
+        :rtype: User/None
+        """
+
+        try:
+            user_id = jwt.decode(token, current_app.config['SECRET_KEY'],
+                                 algorithms=['HS256'])['reset_password']
+        except jwt.DecodeError:
+            return
+        except jwt.ExpiredSignatureError:
+            return
+        return User.query.get(user_id)
 
 
 class Role(db.Model, RoleMixin):
