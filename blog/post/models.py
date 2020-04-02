@@ -138,7 +138,8 @@ class Comment(db.Model, LikableModel):
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), index=True)
     body = db.Column(db.Text)
     datetime = db.Column(db.DateTime, default=datetime.now())
-    likes = db.relationship('CommentLike', backref='comment', lazy=True)
+    marks = db.relationship('CommentLike', backref='comment', lazy="dynamic")
+    user = db.relationship('User', backref='comments', lazy=True)
 
     # Parameters for Likable model
     like_model = CommentLike
@@ -157,9 +158,9 @@ class Post(db.Model, LikableModel):
     slug = db.Column(db.String(64), index=True, unique=True)
     body = db.Column(db.Text)
     created = db.Column(db.DateTime, default=datetime.now())
-    comments = db.relationship('Comment', backref='post', lazy=True,
+    comments = db.relationship('Comment', backref='post', lazy="dynamic",
                                order_by=Comment.datetime.desc())
-    marks = db.relationship('PostLike', backref='post', lazy=True)
+    marks = db.relationship('PostLike', backref='post', lazy="dynamic")
     user = db.relationship('User', backref='posts', lazy=True)
 
     # Parameters for Likable model
