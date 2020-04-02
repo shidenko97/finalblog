@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% import "material/utils.html" as util %}
+{% import "material/wtf.html" as wtf %}
+
+{% set post_list %}
+    <ul class="collection">
+        {% for post in posts %}
+            {% include "post/_post.html" %}
+        {% endfor %}
+    </ul>
+    {% set prev_active = "waves-effect" if prev_page else "disabled" %}
+    {% set next_active = "waves-effect" if next_page else "disabled" %}
+    <ul class="pagination center-align">
+        <li class="{{ prev_active }}">
+            <a href="{{ prev_page }}">
+                <i class="material-icons">chevron_left</i>
+            </a>
+        </li>
+        <li class="active"><a href="#">{{ current_page }}</a></li>
+        <li class="{{ next_active }}">
+            <a href="{{ next_page }}">
+                <i class="material-icons">chevron_right</i>
+            </a>
+        </li>
+    </ul>
+{% endset %}
+
+{% block content %}
+    {{ container() }}
+        {{ row() }}
+            {{ col(["m12"]) }}
+                {{ util.card("All posts", post_list) }}
+            {{ enddiv() }}
+        {{ enddiv() }}
+    {{ enddiv() }}
+    <div class="fixed-action-btn">
+      <a href="{{ url_for("post.create_post") }}"
+         class="btn-floating btn-large">
+        <i class="large material-icons">create</i>
+      </a>
+    </div>
+{% endblock %}

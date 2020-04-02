@@ -39,4 +39,7 @@ def create_app():
     from blog.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix="/auth")
 
+    from blog.post import bp as post_bp
+    app.register_blueprint(post_bp, url_prefix="/blog")
+
     return app
