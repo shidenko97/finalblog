@@ -42,4 +42,7 @@ def create_app():
     from blog.post import bp as post_bp
     app.register_blueprint(post_bp, url_prefix="/blog")
 
+    from blog.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix="/api")
+
     return app

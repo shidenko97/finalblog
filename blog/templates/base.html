@@ -37,6 +37,7 @@
                                     Posts
                                 </a>
                             </li>
+                            <li><a href="{{ url_for("api.doc") }}">API</a></li>
                             <li>
                                 <a class="dropdown-trigger"
                                    href="#"
@@ -67,6 +68,7 @@
             <li><a href="{{ url_for("auth.register") }}">Sign up</a></li>
         {% else %}
             <li><a href="{{ url_for("post.all_posts") }}">Posts</a></li>
+            <li><a href="{{ url_for("api.doc") }}">API</a></li>
             <li><a href="{{ url_for("auth.profile") }}">Profile</a></li>
             <li><a href="{{ url_for("auth.logout") }}">Logout</a></li>
         {% endif %}
