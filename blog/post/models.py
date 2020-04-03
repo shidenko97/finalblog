@@ -116,8 +116,12 @@ class PostLike(db.Model):
     """Model for post's likes"""
 
     id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), index=True)
+    post_id = db.Column(db.Integer,
+                        db.ForeignKey("post.id", ondelete="CASCADE"),
+                        index=True)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("user.id", ondelete="CASCADE"),
+                        index=True)
     sign = db.Column(db.Boolean, index=True)
 
 
@@ -125,8 +129,12 @@ class CommentLike(db.Model):
     """Model for comment's likes"""
 
     id = db.Column(db.Integer, primary_key=True)
-    comment_id = db.Column(db.Integer, db.ForeignKey("comment.id"), index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), index=True)
+    comment_id = db.Column(db.Integer,
+                           db.ForeignKey("comment.id", ondelete="CASCADE"),
+                           index=True)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("user.id", ondelete="CASCADE"),
+                        index=True)
     sign = db.Column(db.Boolean, index=True)
 
 
@@ -134,8 +142,12 @@ class Comment(db.Model, LikableModel):
     """Model for comments"""
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), index=True)
-    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), index=True)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("user.id", ondelete="CASCADE"),
+                        index=True)
+    post_id = db.Column(db.Integer,
+                        db.ForeignKey("post.id", ondelete="CASCADE"),
+                        index=True)
     body = db.Column(db.Text)
     datetime = db.Column(db.DateTime, default=datetime.now())
     marks = db.relationship('CommentLike', backref='comment', lazy="dynamic")
@@ -153,7 +165,9 @@ class Post(db.Model, LikableModel):
     """Posts per page for pagination"""
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), index=True)
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("user.id", ondelete="CASCADE"),
+                        index=True)
     title = db.Column(db.String(64))
     slug = db.Column(db.String(64), index=True, unique=True)
     body = db.Column(db.Text)

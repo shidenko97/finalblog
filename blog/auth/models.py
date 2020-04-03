@@ -12,8 +12,10 @@ from blog import db
 # M2M links between Users and Roles
 user_role = db.Table(
     "user_role",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-    db.Column("role_id", db.Integer, db.ForeignKey("role.id"))
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id",
+                                                   ondelete="CASCADE")),
+    db.Column("role_id", db.Integer, db.ForeignKey("role.id",
+                                                   ondelete="CASCADE"))
 )
 
 
