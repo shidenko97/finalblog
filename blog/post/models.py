@@ -173,6 +173,9 @@ class Post(db.Model, LikableModel):
     def generate_slug(self):
         """Create unique slug from title"""
 
+        all_slugs = Post.query.with_entities(Post.slug).all()
+
         if self.title:
-            custom_slugify = UniqueSlugify(to_lower=True)
+            custom_slugify = UniqueSlugify(to_lower=True,
+                                           uids=[slug for slug, in all_slugs])
             self.slug = custom_slugify(self.title)

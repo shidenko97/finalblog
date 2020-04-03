@@ -17,6 +17,20 @@ class PostModelCase(TestTemplate):
 
         self.assertEqual("test-the-post-123", post.slug)
 
+    def test_slug_unique(self):
+        """"""
+
+        post1 = Post(title="Test unique slug")
+        post1.generate_slug()
+
+        db.session.add(post1)
+        db.session.commit()
+
+        post2 = Post(title="Test unique slug")
+        post2.generate_slug()
+
+        self.assertEqual("test-unique-slug-1", post2.slug)
+
     def test_post_like(self):
         """Test liking"""
 
