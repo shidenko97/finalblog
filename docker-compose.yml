@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+
+  app:
+    build: .
+    environment:
+      FLASK_APP: "run.py"
+      FLASK_ENV: "testing"
+      DEBUG: "true"
+      SECRET_KEY: "QtO!oq6Ucm@Wlfwc!4E%w68J7e1*The^u5odJdn&JT0*aB#1BDH1mm@#rc&7fFZi"
+      DATABASE_URI: "postgresql://postgres:NU99U0g4cxMz97Lock8Fy6N0Mn3j88nh@postgres:5432/postgres"
+      SECURITY_PASSWORD_SALT: "OhSaJbhUxxAJ3XxWMT@34hhoWj5zs@rR"
+      API_LOG_HOST: "mongo"
+      MAIL_SERVER: "mail.teedex.net"
+      MAIL_USERNAME: "test-finalblog@webcoder.software"
+      MAIL_PASSWORD: "*YADFbSA&*FRbda795G"
+      MAIL_DEFAULT_SENDER: "test-finalblog@webcoder.software"
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/www/flask-app
+    depends_on:
+      - postgres
+      - mongo
+
+  postgres:
+    image: "postgres:latest"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "NU99U0g4cxMz97Lock8Fy6N0Mn3j88nh"
+
+  mongo:
+    image: "mongo:latest"
+    restart: always
