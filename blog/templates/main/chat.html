@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{%- block styles %}
+    <link href="{{material_find_resource('css/materialize.css',
+                                         cdn='material')}}"
+          rel="stylesheet"
+          media="screen"
+    >
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+          rel="stylesheet"
+    >
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"
+    >
+    <style>
+        .chat-field {
+            background-color: #fff;
+            display: inline-block;
+            position: relative;
+            padding: 5px;
+            margin-left: 10px;
+            border: 2px solid red;
+            border-top-right-radius: 10px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .chat-field2 {
+            background-color: #fff;
+            display: inline-block;
+            position: relative;
+            padding: 5px;
+            margin-right: 10px;
+            border: 2px solid grey;
+            border-top-left-radius: 10px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .chat-message {
+            margin: 0;
+        }
+
+        .example {
+            width: 0;
+            height: 0;
+            border-width: 10px 0 10px 10px;
+            border-style: solid;
+            border-color: red transparent transparent transparent;
+            position: absolute;
+            top: -2px;
+            left: 0;
+            transform: translate(-100%, 0);
+        }
+
+        .example2 {
+            width: 0;
+            height: 0;
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: grey transparent transparent transparent;
+            position: absolute;
+            top: -2px;
+            right: -20px;
+            transform: translate(-100%, 0);
+        }
+
+        .chat-block {
+            height: calc(100vh - 245px);
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        .message-item {
+            margin-top: 20px;
+        }
+    </style>
+{%- endblock styles %}
+
+{% block content %}
+    {{ container() }}
+        {{ row() }}
+            <h4>Chats</h4>
+            <hr class="grey" />
+            {{ col(["col", "s12", "m12", "l12", "chat-block"]) }}
+            {{ enddiv() }}
+        {{ enddiv() }}
+        {{ row() }}
+            {{ col(["col", "s12"]) }}
+                <div class="input-field col s11">
+                    <input placeholder="Type your message here"
+                           id="message-block" type="text" class="validate">
+                </div>
+                <div class="input-field col s1 right-align">
+                    <button class="btn waves-effect waves-light btn-small
+                                    indigo btn-block" id="send" type="button">
+                        <i class="material-icons white-text">send</i>
+                    </button>
+                </div>
+            {{ row() }}
+        {{ enddiv() }}
+    {{ enddiv() }}
+    <div id="own-chat-item" class="hiddendiv">
+        <div class="message-item row right-align">
+            <div class="col s12 m8 l6 right">
+                <div class="row valign-wrapper">
+                    <div class="chat-field2 grey">
+                        <span class="chat-message white-text">
+                            {message}
+                        </span>
+                        <div class="example2"></div>
+                    </div>
+                    <div class="col s2"
+                         style="margin-top:-22px; margin-right:-10px;"
+                    >
+                        <img x-src=""
+                             height="100"
+                             alt="{fullname}"
+                             title="{fullname}"
+                             class="circle responsive-img"
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="chat-item" class="hiddendiv">
+        <div class="message-item row left-align">
+            <div class="col s12 m8 l6 left">
+                <div class="row valign-wrapper">
+                    <div class="col s2"
+                         style="margin-top:-22px; margin-right:-10px;"
+                    >
+                        <img x-src=""
+                             height="100"
+                             alt="{fullname}"
+                             title="{fullname}"
+                             class="circle responsive-img"
+                        >
+                    </div>
+                    <div class="chat-field red">
+                        <span class="chat-message white-text">
+                            {message}
+                        </span>
+                        <div class="example"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript"
+            src="{{material_find_resource('jquery.js', cdn='jquery')}}">
+    </script>
+    <script type="text/javascript"
+            src="{{material_find_resource('js/materialize.js',
+                                          cdn='material')}}"></script>
+    <script type="text/javascript">
+        $(function () {
+            let conn = null;
+            let name = "{{ current_user.fullname }}";
+            let avatar = "{{ current_user.avatar(100) }}";
+
+            function log(msg, name_, avatar_) {
+                let control = $('.chat-block');
+                let selector = "#own-chat-item";
+                if (name_ !== name)
+                    selector = "#chat-item";
+                template = $($(selector).clone().html()
+                    .replace("{message}", msg)
+                    .replaceAll("{fullname}", name_)
+                    .replace(
+                        "x-src=\"\"",
+                        "src=\"" + avatar_ + "\""
+                    )
+                );
+                control.animate({
+                    scrollTop: control[0].scrollHeight
+                }, 800);
+                template.clone().appendTo(control);
+            }
+
+            function connect() {
+                let wsUri = (window.location.protocol === 'https:' &&
+                    'wss://' || 'ws://') + window.location.hostname +
+                    ":{{ chat_port }}?username=" + name + "&avatar=" + avatar;
+                conn = new WebSocket(wsUri);
+                conn.onmessage = function (e) {
+                    let data = JSON.parse(e.data);
+                    switch (data.action) {
+                        case 'connect':
+                            log("Joined " + data.name, data.name, data.avatar);
+                            break;
+                        case 'disconnect':
+                            log('Disconnected ' + data.name, data.name,
+                                data.avatar);
+                            break;
+                        case 'join':
+                            log("Joined " + data.name, data.name, data.avatar);
+                            break;
+                        case 'sent':
+                            log(data.text, data.name, data.avatar);
+                            break;
+                    }
+                };
+            }
+
+            $('#send').on('click', function () {
+                var text = $('#message-block').val();
+                if (!text.length) {
+                    alert("Empty message!");
+                    return false;
+                }
+                log(text, name, avatar);
+                conn.send(text);
+                $('#message-block').val('').focus();
+                return false;
+            });
+
+            $('#message-block').on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    $('#send').click();
+                    return false;
+                }
+            });
+            connect();
+        });
+    </script>
+{% endblock %}

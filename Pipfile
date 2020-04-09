@@ -13,6 +13,7 @@ werkzeug = "==0.16.1"
 rfc3339 = "*"
 pymongo = "*"
 mongolog = "*"
+aiohttp = "*"
 
 [requires]
 python_version = "3.8"

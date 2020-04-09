@@ -15,6 +15,7 @@ services:
       MAIL_USERNAME: "test-finalblog@webcoder.software"
       MAIL_PASSWORD: "*YADFbSA&*FRbda795G"
       MAIL_DEFAULT_SENDER: "test-finalblog@webcoder.software"
+      CHAT_PORT: "8080"
     ports:
       - "5000:5000"
     volumes:
@@ -22,6 +23,13 @@ services:
     depends_on:
       - postgres
       - mongo
+
+  chat:
+    build: chat/
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/www/flask-app/chat
 
   postgres:
     image: "postgres:latest"

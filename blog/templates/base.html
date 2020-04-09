@@ -33,6 +33,11 @@
                             </li>
                         {% else %}
                             <li>
+                                <a href="{{ url_for("main.chat") }}">
+                                    Chat
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ url_for("post.all_posts") }}">
                                     Posts
                                 </a>
@@ -67,6 +72,7 @@
             <li><a href="{{ url_for("auth.login") }}">Sign in</a></li>
             <li><a href="{{ url_for("auth.register") }}">Sign up</a></li>
         {% else %}
+            <li><a href="{{ url_for("main.chat") }}">Chat</a></li>
             <li><a href="{{ url_for("post.all_posts") }}">Posts</a></li>
             <li><a href="{{ url_for("api.doc") }}">API</a></li>
             <li><a href="{{ url_for("auth.profile") }}">Profile</a></li>
