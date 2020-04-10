@@ -1,6 +1,8 @@
 # Finalblog
 [![CircleCI](https://circleci.com/gh/shidenko97/finalblog.svg)](https://circleci.com/gh/shidenko97/finalblog)
 
+[Demo](https://flask-finalblog.herokuapp.com)
+
 A simple blog with chat based on [AIOHTTP](https://docs.aiohttp.org/) and REST API based on [Flask web-framework](https://flask.palletsprojects.com/en/1.1.x/). Created as a final task for a [Python Advanced Course at ITEA](https://itea.ua/uk/courses_itea/python_programming/python_advanced/)
 
 ### Quick start
